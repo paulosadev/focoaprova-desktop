@@ -16,6 +16,13 @@ no estilo "Dynamic Island". Usa o mesmo Supabase do app: tudo que você estuda n
   <img alt="Windows" src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows&logoColor=white">
 </p>
 
+## Download
+
+Baixe o instalador para Windows 10/11 na
+[página de releases](https://github.com/paulosadev/focoaprova-desktop/releases/latest).
+O instalador ainda não tem assinatura digital: se o Windows mostrar "O Windows protegeu o computador", clique em
+**Mais informações** e depois em **Executar assim mesmo**.
+
 ## Tecnologias
 
 - **Electron 39**: janela transparente sempre no topo, bandeja, atalho global, notificações nativas e instalador
