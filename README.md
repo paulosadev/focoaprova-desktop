@@ -19,7 +19,8 @@ no estilo "Dynamic Island". Usa o mesmo Supabase do app: tudo que você estuda n
 ## Download
 
 Baixe o instalador para Windows 10/11 na
-[página de releases](https://github.com/paulosadev/focoaprova-desktop/releases/latest).
+[página de releases](https://github.com/paulosadev/focoaprova-desktop/releases/latest), ou use o FocoAprova direto
+no navegador em **[focoaprova.vercel.app](https://focoaprova.vercel.app)**.
 O instalador ainda não tem assinatura digital: se o Windows mostrar "O Windows protegeu o computador", clique em
 **Mais informações** e depois em **Executar assim mesmo**.
 
@@ -42,7 +43,7 @@ O instalador ainda não tem assinatura digital: se o Windows mostrar "O Windows 
   - **Hoje**: igual à tela Início do app. Frase do dia, dias para a prova, matérias do cronograma de hoje com
     checklist (e o último assunto estudado) e as anotações de erro para revisar hoje.
 - **Login** com Google ou e-mail e senha, a mesma conta do app. A sessão fica salva.
-- **Bandeja do Windows**: abrir painel, esconder a pílula, iniciar com o Windows e sair.
+- **Bandeja do Windows**: abrir painel, abrir o FocoAprova na web, esconder a pílula, iniciar com o Windows e sair.
 - **Offline**: se a internet cair, a sessão de estudo fica na fila e sobe quando a conexão voltar.
 
 ## Como rodar

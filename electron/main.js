@@ -23,6 +23,8 @@ const PORTA_LOGIN = 47811;
 // tamanho que vai "crescendo" em escala de tela diferente de 100%.
 const JANELA = { largura: 440, altura: 620 };
 const MARGEM_TOPO = 6;
+const ALTURA_MINIMA = 380;
+const URL_WEB = 'https://focoaprova.vercel.app';
 const ATALHO = 'CommandOrControl+Shift+Space';
 const ICONE = path.join(__dirname, '..', 'build', 'icon.png');
 const ICONE_TRAY = path.join(__dirname, '..', 'build', 'tray.png');
@@ -40,18 +42,22 @@ if (!app.requestSingleInstanceLock()) app.exit(0);
 // menu Iniciar; em dev não há atalho, então usa o caminho do electron.exe
 app.setAppUserModelId(app.isPackaged ? 'com.focoaprova.desktop' : process.execPath);
 
-function posicaoNoTopo() {
+// em tela baixa (notebook 768px, escala 125-150%) os 620px não cabem e o
+// Windows corta a janela; aí a altura encolhe pra área útil e o conteúdo rola
+function limitesNoTopo() {
   const { workArea } = screen.getPrimaryDisplay();
+  const altura = Math.min(JANELA.altura, workArea.height - MARGEM_TOPO * 2);
   return {
     x: Math.round(workArea.x + (workArea.width - JANELA.largura) / 2),
     y: workArea.y + MARGEM_TOPO,
+    width: JANELA.largura,
+    height: Math.max(altura, ALTURA_MINIMA),
   };
 }
 
 function reposicionar() {
   if (!janela) return;
-  const { x, y } = posicaoNoTopo();
-  janela.setPosition(x, y);
+  janela.setBounds(limitesNoTopo());
 }
 
 // o Windows às vezes "esquece" o topmost depois de esconder/mostrar
@@ -85,13 +91,8 @@ function setExpandida(valor) {
 }
 
 function criarJanela() {
-  const { x, y } = posicaoNoTopo();
-
   janela = new BrowserWindow({
-    x,
-    y,
-    width: JANELA.largura,
-    height: JANELA.altura,
+    ...limitesNoTopo(),
     frame: false,
     transparent: true,
     resizable: false,
@@ -163,6 +164,7 @@ function alternarPeloTray() {
 function montarMenu() {
   return Menu.buildFromTemplate([
     { label: 'Abrir painel', click: () => setExpandida(true) },
+    { label: 'Abrir FocoAprova na web', click: () => shell.openExternal(URL_WEB) },
     {
       label: 'Mostrar pílula',
       type: 'checkbox',
