@@ -8,6 +8,21 @@ no estilo "Dynamic Island". Usa o mesmo Supabase do app: tudo que você estuda n
   <img src="docs/painel.png" alt="Painel aberto na aba Foco" width="330">
 </p>
 
+<p align="center">
+  <img alt="Electron" src="https://img.shields.io/badge/Electron-39-47848F?logo=electron&logoColor=white">
+  <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white">
+  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-Auth%20%2B%20Postgres-3ECF8E?logo=supabase&logoColor=white">
+  <img alt="Windows" src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows&logoColor=white">
+</p>
+
+## Tecnologias
+
+- **Electron 39**: janela transparente sempre no topo, bandeja, atalho global, notificações nativas e instalador
+  NSIS (`electron-builder`).
+- **React 19 + Vite 7**: interface da pílula e do painel, com recarregamento automático em desenvolvimento.
+- **Supabase**: login (Google via PKCE e e-mail/senha) e o mesmo banco Postgres do app mobile, protegido por RLS.
+
 ## O que faz
 
 - **Pílula no topo da tela**: centralizada e sempre por cima, inclusive de apps em tela cheia (sem bordas). Mostra o
@@ -56,6 +71,24 @@ administrador) e cria o atalho **FocoAprova** no menu Iniciar. O app instalado c
 
 A sessão do modo dev e a do app instalado são separadas, então é preciso entrar na conta uma vez em cada um.
 
+## Decisões técnicas
+
+- **Janela de tamanho fixo com clique atravessando.** A janela sempre tem o tamanho do painel; recolhida, ela usa
+  `setIgnoreMouseEvents(true, { forward: true })` e só a pílula recebe o mouse. Trocar entre pílula e painel não
+  redimensiona nada, o que evita flicker e o bug de janela que "cresce" em telas com escala diferente de 100%.
+- **Por cima até de tela cheia.** O nível `screen-saver` do `setAlwaysOnTop` é reaplicado sempre que a janela
+  aparece, porque o Windows às vezes perde o *topmost* depois de esconder e mostrar.
+- **Timer que não atrasa.** O Pomodoro guarda o horário de término (`fimEm`) e calcula o restante a partir do
+  relógio, em vez de contar ticks. Mesmo que o Windows segure o `setInterval`, o tempo continua certo, e o timer
+  sobrevive a um reinício do app.
+- **Login Google em app desktop.** O processo principal sobe um servidor HTTP local em `127.0.0.1:47811` só para
+  receber o `?code=` do OAuth, e a interface troca esse código pela sessão (fluxo PKCE). O servidor fecha sozinho
+  depois do retorno ou de 5 minutos.
+- **Fila offline.** Se a gravação da sessão de estudo falhar, ela vai para uma fila local e é reenviada quando o app
+  abre de novo com a conta conectada.
+- **Segurança do Electron.** `contextIsolation` ligado, `nodeIntegration` desligado e só uma API mínima exposta pelo
+  `preload.js`.
+
 ## Estrutura
 
 ```
@@ -76,3 +109,8 @@ não cria tabelas. A anon key é pública por design, e quem protege os dados é
 - Tutor IA (explicar e gerar questões/flashcards a partir do texto copiado) via Edge Function.
 - Modo foco que avisa quando abrir um site ou app de distração.
 - Timer em andamento sincronizado com o celular (tabela de sessão ativa + Realtime).
+
+## Autor
+
+Feito por **Paulo Levy Soares e Sá** ([@paulosadev](https://github.com/paulosadev)), como parte do ecossistema
+[FocoAprova](https://github.com/paulosadev/FocoAprova).
