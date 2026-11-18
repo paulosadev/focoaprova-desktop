@@ -1,0 +1,815 @@
+/* paleta escura do FocoAprova (src/theme.js do app) */
+:root {
+  --fundo: #0c131b;
+  --superficie: #141d27;
+  --superficie2: #1a2530;
+  --borda: #28394a;
+  --texto: #e4edf7;
+  --texto2: #93aac2;
+  --fraco: #64798e;
+  --destaque: #9bcbff;
+  --destaque-texto: #042c53;
+  --ambar: #efaf3f;
+  --perigo: #e07a6f;
+  --sucesso: #5bc48a;
+  --display: 'Space Grotesk', 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--texto);
+  font-size: 14px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+input,
+select {
+  font: inherit;
+  color: var(--texto);
+  background: var(--superficie2);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 9px 11px;
+  outline: none;
+  width: 100%;
+  user-select: text;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--destaque);
+}
+
+/* ---------- pílula ---------- */
+/* a janela tem o tamanho do painel; a pílula fica na faixa de cima,
+   com folga em volta pro pulso. O resto é transparente e deixa o clique passar */
+.pilula-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.pilula-area .pilula {
+  pointer-events: auto;
+}
+
+.pilula {
+  position: relative;
+  height: 36px;
+  min-width: 132px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px 0 8px;
+  background: #05090d;
+  border: 1px solid #1d2a37;
+  border-radius: 999px;
+  cursor: pointer;
+  overflow: visible;
+  transition: transform 0.18s cubic-bezier(0.3, 1.6, 0.5, 1), border-color 0.2s, box-shadow 0.2s;
+}
+
+/* pulso ao passar o mouse: cresce um pouco e solta uma onda azul */
+.pilula:hover {
+  transform: scale(1.06);
+  border-color: var(--destaque);
+  box-shadow: 0 0 14px rgba(155, 203, 255, 0.35);
+}
+
+.pilula::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 2px solid var(--destaque);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pilula:hover::after {
+  animation: onda 1.1s ease-out infinite;
+}
+
+.pilula-pausa:hover::after,
+.pilula-pausa::after {
+  border-color: var(--ambar);
+}
+
+@keyframes onda {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25, 1.6);
+  }
+}
+
+.pilula:active {
+  transform: scale(0.97);
+}
+
+.pilula-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+}
+
+.pilula-texto {
+  flex: 1;
+  text-align: center;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pilula-ponto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ponto-foco {
+  background: var(--destaque);
+  box-shadow: 0 0 8px var(--destaque);
+  animation: piscar 2s infinite;
+}
+
+.ponto-pausa {
+  background: var(--ambar);
+  box-shadow: 0 0 8px var(--ambar);
+}
+
+.ponto-parado {
+  background: var(--sucesso);
+  box-shadow: 0 0 6px var(--sucesso);
+}
+
+@keyframes piscar {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.pilula-barra {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--destaque);
+  transform-origin: left;
+  opacity: 0.7;
+}
+
+.pilula-pausa .pilula-barra {
+  background: var(--ambar);
+}
+
+/* ---------- painel ---------- */
+.painel {
+  position: absolute;
+  inset: 4px;
+  display: flex;
+  flex-direction: column;
+  background: var(--fundo);
+  border: 1px solid var(--borda);
+  border-radius: 20px;
+  overflow: hidden;
+  transform-origin: top center;
+  animation: abrir 0.22s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+@keyframes abrir {
+  from {
+    opacity: 0;
+    transform: scale(0.35, 0.08);
+    border-radius: 999px;
+  }
+}
+
+/* volta encolhendo pro lugar da pílula */
+.painel.fechando {
+  animation: fechar 0.16s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes fechar {
+  to {
+    opacity: 0;
+    transform: scale(0.35, 0.08);
+    border-radius: 999px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .painel,
+  .painel.fechando {
+    animation-duration: 0.01s;
+  }
+}
+
+.painel-topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 12px;
+}
+
+.painel-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.painel-titulo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.painel-titulo strong {
+  font-family: var(--display);
+  font-size: 18px;
+}
+
+.painel-titulo span {
+  color: var(--texto2);
+  font-size: 12px;
+}
+
+.botao-icone {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1px solid var(--borda);
+  background: var(--superficie);
+  color: var(--texto2);
+  display: grid;
+  place-items: center;
+}
+
+.botao-icone:hover {
+  color: var(--texto);
+}
+
+.abas {
+  display: flex;
+  gap: 6px;
+  margin: 0 16px;
+  padding: 4px;
+  background: var(--superficie);
+  border-radius: 10px;
+}
+
+.abas button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--texto2);
+  padding: 7px;
+  border-radius: 7px;
+  font-weight: 600;
+}
+
+.abas button.ativa {
+  background: var(--superficie2);
+  color: var(--destaque);
+}
+
+.painel-conteudo {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.painel-conteudo::-webkit-scrollbar {
+  width: 6px;
+}
+
+.painel-conteudo::-webkit-scrollbar-thumb {
+  background: var(--borda);
+  border-radius: 3px;
+}
+
+.painel-rodape {
+  margin-top: auto; /* fica no pé do painel também na tela de login */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid var(--borda);
+  color: var(--fraco);
+  font-size: 11px;
+}
+
+.aviso {
+  margin: 16px;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--superficie);
+  border: 1px solid var(--ambar);
+  color: var(--texto2);
+  line-height: 1.5;
+}
+
+/* ---------- botões ---------- */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.botao:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.botao-primario {
+  background: var(--destaque);
+  color: var(--destaque-texto);
+}
+
+.botao-secundario {
+  background: var(--superficie);
+  border-color: var(--borda);
+  color: var(--texto);
+}
+
+.botao-grande {
+  flex: 1;
+}
+
+.botao-pequeno {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.botao-google {
+  width: 100%;
+  background: #fff;
+  color: #1f2a35;
+}
+
+.link {
+  border: none;
+  background: none;
+  color: var(--destaque);
+  padding: 0;
+  font-size: 12px;
+}
+
+.rodape-acoes {
+  display: flex;
+  gap: 14px;
+}
+
+.painel-rodape .link {
+  color: var(--texto2);
+}
+
+.dica {
+  color: var(--fraco);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 8px 0;
+}
+
+.centro {
+  text-align: center;
+}
+
+/* ---------- login ---------- */
+.login {
+  padding: 8px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-intro {
+  color: var(--texto2);
+  line-height: 1.5;
+  margin: 0 0 4px;
+}
+
+.divisor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fraco);
+  font-size: 12px;
+}
+
+.divisor::before,
+.divisor::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--borda);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--texto2);
+  font-size: 12px;
+}
+
+.erro {
+  color: var(--perigo);
+  font-size: 13px;
+  margin: 0;
+}
+
+.login-dica {
+  color: var(--fraco);
+  font-size: 12px;
+  text-align: center;
+  margin: 0;
+}
+
+/* ---------- cartões (mesmo Cartao do app) ---------- */
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.titulo-cartao {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--texto2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.linha-titulo-cartao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.linha-titulo-cartao .titulo-cartao {
+  margin: 0;
+}
+
+.vazio {
+  margin: 0;
+  color: var(--fraco);
+  font-size: 13px;
+}
+
+/* ---------- aba foco ---------- */
+.aba-foco {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cartao-timer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.relogio {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  margin: 0 auto;
+}
+
+.relogio-anel {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.anel-fundo {
+  fill: none;
+  stroke: var(--superficie2);
+  stroke-width: 8;
+}
+
+.anel-progresso {
+  fill: none;
+  stroke: var(--destaque);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s linear;
+}
+
+.relogio-pausa .anel-progresso,
+.relogio-pausaLonga .anel-progresso {
+  stroke: var(--ambar);
+}
+
+.relogio-centro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.relogio-modo {
+  color: var(--destaque);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.relogio-pausa .relogio-modo,
+.relogio-pausaLonga .relogio-modo {
+  color: var(--ambar);
+}
+
+/* HH:MM:SS igual ao app; menor que antes pra caber no anel */
+.relogio-tempo {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 36px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pontos {
+  display: flex;
+  gap: 7px;
+  margin-top: 6px;
+}
+
+.ponto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--borda);
+}
+
+.ponto.cheio {
+  background: var(--ambar);
+  border-color: var(--ambar);
+}
+
+.controles {
+  display: flex;
+  gap: 8px;
+}
+
+.seletor-duracao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--texto2);
+  font-size: 13px;
+}
+
+.seletor-duracao + .seletor-duracao {
+  margin-top: 8px;
+}
+
+.seletor-duracao input {
+  width: 110px;
+  font-family: var(--display);
+  font-variant-numeric: tabular-nums;
+  color-scheme: dark; /* ícone e popup do input de horário no tema escuro */
+}
+
+/* ---------- aba hoje (tela Início do app) ---------- */
+.aba-hoje {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cartao-frase {
+  border-left: 3px solid var(--destaque);
+}
+
+.frase {
+  margin: 0 0 6px;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.frase-autor {
+  margin: 0;
+  color: var(--texto2);
+  font-size: 12px;
+  text-align: right;
+}
+
+.cartao-contagem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cartao-contagem strong {
+  font-family: var(--display);
+  font-size: 40px;
+  color: var(--destaque);
+  line-height: 1.1;
+}
+
+.cartao-contagem span {
+  margin-top: 4px;
+  color: var(--texto2);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cartao-sem-prova {
+  padding: 10px 14px;
+  color: var(--fraco);
+  font-size: 12px;
+  text-align: center;
+}
+
+.materias {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linha-materia {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.coluna-materia {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nome-materia {
+  font-size: 14px;
+}
+
+.nome-materia.feita {
+  color: var(--fraco);
+  text-decoration: line-through;
+}
+
+.ultimo-assunto {
+  margin-top: 2px;
+  color: var(--fraco);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contador-ambar {
+  min-width: 22px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--ambar);
+  color: var(--fundo);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.item-anotacao {
+  margin-bottom: 6px;
+  padding: 6px 10px;
+  border-left: 2px solid var(--ambar);
+  background: var(--superficie2);
+  font-size: 13px;
+}
+
+.mais-texto {
+  margin: 4px 0 0;
+  color: var(--fraco);
+  font-size: 12px;
+}
+
+.assunto {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.assunto div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- avanço automático ---------- */
+.linha-interruptor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.linha-interruptor div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.linha-interruptor strong {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.linha-interruptor span {
+  font-size: 11px;
+  color: var(--fraco);
+  line-height: 1.4;
+}
+
+/* interruptor no estilo do Switch do app */
+.interruptor {
+  appearance: none;
+  flex-shrink: 0;
+  width: 38px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--borda);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.interruptor::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--superficie);
+  transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.interruptor:checked {
+  background: var(--destaque);
+}
+
+.interruptor:checked::after {
+  transform: translateX(16px);
+}
