@@ -237,6 +237,17 @@ select:focus {
   }
 }
 
+/* faixa realçada de cima: mesmo fundo do rodapé, com linha separando do conteúdo */
+.painel-faixa-topo {
+  flex-shrink: 0;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borda);
+  padding-bottom: 12px;
+  box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.6); /* sombra leve: o conteúdo rola "por baixo" */
+  position: relative;
+  z-index: 1;
+}
+
 .painel-topo {
   display: flex;
   align-items: center;
@@ -271,7 +282,7 @@ select:focus {
   height: 32px;
   border-radius: 9px;
   border: 1px solid var(--borda);
-  background: var(--superficie);
+  background: var(--superficie2); /* destaca sobre a faixa do topo */
   color: var(--texto2);
   display: grid;
   place-items: center;
@@ -286,7 +297,8 @@ select:focus {
   gap: 6px;
   margin: 0 16px;
   padding: 4px;
-  background: var(--superficie);
+  background: var(--fundo); /* trilho escuro contrastando com a faixa */
+  border: 1px solid var(--borda);
   border-radius: 10px;
 }
 
@@ -307,7 +319,6 @@ select:focus {
 
 /* com pouca altura, só o conteúdo encolhe (e rola); topo, abas e rodapé ficam inteiros */
 .painel-topo,
-.abas,
 .painel-rodape {
   flex-shrink: 0;
 }
@@ -333,10 +344,30 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--superficie); /* faixa realçada, separada do conteúdo */
   border-top: 1px solid var(--borda);
   color: var(--fraco);
   font-size: 11px;
+}
+
+.botao-web {
+  padding: 6px 11px;
+  font-size: 12px;
+  background: var(--superficie2);
+  border-color: var(--borda);
+  color: var(--destaque);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.botao-web:hover {
+  border-color: var(--destaque);
+  background: rgba(155, 203, 255, 0.08);
+}
+
+.painel-rodape .link:hover {
+  color: var(--texto);
 }
 
 .aviso {

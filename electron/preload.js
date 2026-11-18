@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('desktop', {
   mouseNaPilula: (dentro) => ipcRenderer.send('janela:mouse-na-pilula', dentro),
   notificar: (titulo, corpo) => ipcRenderer.send('notificar', titulo, corpo),
   menu: () => ipcRenderer.send('janela:menu'),
+  abrirWeb: () => ipcRenderer.send('app:abrir-web'),
   sair: () => ipcRenderer.send('app:sair'),
   aoMudarEstado: (callback) => {
     const ouvinte = (_evento, expandida) => callback(expandida);

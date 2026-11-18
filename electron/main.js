@@ -258,6 +258,8 @@ ipcMain.on('janela:alternar', () => setExpandida(!expandida));
 // sem ícone na barra de tarefas, a pílula e o painel também dão acesso ao menu e ao "Fechar"
 ipcMain.on('janela:menu', () => montarMenu().popup({ window: janela }));
 ipcMain.on('app:sair', () => app.quit());
+// abre no navegador padrão (não numa janela do Electron)
+ipcMain.on('app:abrir-web', () => shell.openExternal(URL_WEB));
 
 // a interface avisa quando o mouse entra/sai da pílula
 ipcMain.on('janela:mouse-na-pilula', (_evento, dentro) => {

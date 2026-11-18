@@ -1,7 +1,7 @@
 {
   "name": "focoaprova-desktop",
   "productName": "FocoAprova",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pílula de estudo do FocoAprova que fica sempre no topo da tela do Windows",
   "author": "Paulo Levy Soares e Sá",
   "main": "electron/main.js",
